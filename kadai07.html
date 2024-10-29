@@ -6,29 +6,47 @@
 
     <script>
     // https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/#searchexamples
-
     function searchCallback(result) {
       output = document.getElementById('outputArea');
+      output.innerHTML = ''; // 古い検索結果をクリア
       results = result.results;
       for (var r of results) {
         var oneline = document.createElement('div');
         oneline.innerHTML = r["collectionName"];
-		oneline.innerHTML += "<br>";
-		oneline.innerHTML += r["artistName"];
+      if(document.getElementById('artist').checked){
+        oneline.innerHTML += "<br>";
+		    oneline.innerHTML += r["artistName"];
+      }
 		oneline.innerHTML += "<hr />";
 		output.appendChild(oneline);
       }
     }
-    </script>
+      function reloadScript() {
+      var newScript = document.createElement('script');
+      newScript.id = 'caller';
+      
+      if(document.getElementById('JP').checked){
+        newScript.src = 'https://itunes.apple.com/search?term=手嶌&lang=ja_JP&country=JP&callback=searchCallback';
+      }
+      else{
+        newScript.src = 'https://itunes.apple.com/search?term=手嶌&lang=ja_JP&callback=searchCallback';
+      }
+      document.body.appendChild(newScript);
+    }
+  </script>
 
   </head>
   <body>
+    <div style="border: solid 2px;">表示<br>
+      <input type="checkbox" checked id="artist">アーティスト名<br>
+      ストア<br>
+      <input type="radio" name='lang' id="US">US<br>
+      <input type="radio" name='lang' id="JP">JP<br>
+      <input type="button" onclick='reloadScript()' value="条件を変更">
+    </div>
+    <div id='status'></div>
+    <div id='outputArea'></div>
 
-<div id='status'></div>
-<div id='outputArea'></div>
-
-<script id=caller src='https://itunes.apple.com/search?term=手嶌&lang=ja_JP&callback=searchCallback'></script>
-
+    <script id=caller src='https://itunes.apple.com/search?term=手嶌&lang=ja_JP&callback=searchCallback'></script>
   </body>
 </html>
-
